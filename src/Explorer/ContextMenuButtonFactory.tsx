@@ -1,3 +1,4 @@
+import { CopyCollectionPane } from "Explorer/Panes/CopyCollectionPane/CopyCollectionPane";
 import React from "react";
 import AddCollectionIcon from "../../images/AddCollection.svg";
 import AddSqlQueryIcon from "../../images/AddSqlQuery_16x16.svg";
@@ -121,6 +122,25 @@ export const createCollectionContextMenuButton = (
         selectedCollection && selectedCollection.onNewTriggerClick(selectedCollection, undefined);
       },
       label: "New Trigger",
+    });
+  }
+
+  if (userContext.apiType === "SQL" || userContext.apiType === "Cassandra") {
+    items.push({
+      iconSrc: AddTriggerIcon,
+      onClick: () => {
+        const selectedCollection: ViewModels.Collection = useSelectedNode.getState().findSelectedCollection();
+        useSidePanel
+          .getState()
+          .openSidePanel(
+            "Copy " + getCollectionName(),
+            <CopyCollectionPane
+              sourceDatabaseId={selectedCollection.databaseId}
+              sourceCollectionId={selectedCollection.id()}
+            ></CopyCollectionPane>
+          );
+      },
+      label: "Copy Collections",
     });
   }
 
